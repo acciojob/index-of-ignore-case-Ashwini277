@@ -1,8 +1,19 @@
-function indexOfIgnoreCase(s1, s2) {
-  // write your code here
-}
-
-// Please do not change the code below
-const s1 = prompt("Enter s1:");
-const s2 = prompt("Enter s2:");
-alert(indexOfIgnoreCase(s1, s2));
+// cypress/integration/tests/test.spec.js
+describe('indexOfIgnoreCase', () => {
+    it('returns the correct index of first occurrence of subStr in str case-insensitively', () => {
+        cy.visit(baseUrl, {
+            onBeforeLoad(win) {
+                cy.stub(win, 'prompt').onFirstCall().returns("The Quick Brown Fox Jumps Over The Lazy Dog").onSecondCall().returns("FOX");
+            }
+        });
+        
+        // Execute the function and check the alert
+        cy.window().then((win) => {
+            const result = win.indexOfIgnoreCase(win.prompt(), win.prompt());
+            cy.on('window:alert', (str) => {
+                expect(parseInt(str)).to.equal(16);
+            });
+            win.alert(result);
+        });
+    });
+});
